@@ -5,6 +5,6 @@ perl -nE 'BEGIN{$s=50;$n=0}/L(\d+)/ and $s-=$1;/R(\d+)/ and $s+=$1;$s%=100;$n++ 
 echo -ne " 1b "
 perl -lnE 'BEGIN{$s=50;$n=0}/(L|R)(\d+)/;$d=$1eq"L"?-1:1;$t=$2;while($t!=0){$s+=$d;$t--;$s%=100;$n++ unless $s}END{say $n}' input1
 echo -ne " 2a "
-perl -lnE '@s=split/,/;for $r(@s){@r=split/-/,$r;for ($r[0]..$r[1]){$t+=$_ if /^(.*)\1$/}}END{say $t}' input2
+perl -lnE '@s=split/,/;for $r(@s){@r=split/-/,$r;for ($r[0]..$r[1]){$t+=$_ if /^(.*)\1$/}}say $t' input2
 echo -ne " 2b "
-perl -lnE '@s=split/,/;for $r(@s){@r=split/-/,$r;for ($r[0]..$r[1]){$t+=$_ if /^(.*)\1+$/}}END{say $t}' input2
+perl -lnE '@s=split/,/;for $r(@s){@r=split/-/,$r;for ($r[0]..$r[1]){$t+=$_ if /^(.*)\1+$/}}say $t' input2
