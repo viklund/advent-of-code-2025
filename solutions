@@ -8,3 +8,7 @@ echo -ne " 2a "
 perl -lnE '@s=split/,/;for $r(@s){@r=split/-/,$r;for ($r[0]..$r[1]){$t+=$_ if /^(.*)\1$/}}say $t' input2
 echo -ne " 2b "
 perl -lnE '@s=split/,/;for $r(@s){@r=split/-/,$r;for ($r[0]..$r[1]){$t+=$_ if /^(.*)\1+$/}}say $t' input2
+echo -ne " 3a "
+perl solve3a.pl input3
+echo -ne " 3b "
+perl solve3b.pl input3
