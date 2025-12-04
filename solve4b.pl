@@ -15,8 +15,9 @@ my $DIMR = $#map;
 my $DIMC = $#{ $map[0] };
 
 my $answer = 0;
+my $START_ROW = 0;
 START:
-for my $ri (0..$#map) {
+for my $ri ($START_ROW .. $#map) {
     for my $ci (0..$#{$map[$ri]}) {
         next if $map[$ri][$ci] ne '@';
         my @adj = generate_adjacent_positions($ri, $ci);
@@ -27,6 +28,7 @@ for my $ri (0..$#map) {
         if ( $count < 4 ) {
             $answer++;
             $map[$ri][$ci] = '.';
+            $START_ROW = $ri == 0 ? $ri : $ri-1;
             goto START;
         }
     }
