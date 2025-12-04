@@ -15,6 +15,7 @@ my $DIMR = $#map;
 my $DIMC = $#{ $map[0] };
 
 my $answer = 0;
+START:
 for my $ri (0..$#map) {
     for my $ci (0..$#{$map[$ri]}) {
         next if $map[$ri][$ci] ne '@';
@@ -23,7 +24,11 @@ for my $ri (0..$#map) {
         for my $adj (@adj) {
             $count++ if $map[$adj->[0]][$adj->[1]] eq '@';
         }
-        $answer++ if $count<4;
+        if ( $count < 4 ) {
+            $answer++;
+            $map[$ri][$ci] = '.';
+            goto START;
+        }
     }
 }
 say $answer;
