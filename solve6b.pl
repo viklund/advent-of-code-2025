@@ -4,31 +4,48 @@ use warnings;
 
 use feature qw( say );
 
-my $nc = 0;
 my @stuff;
 while (<>) {
-    my @c = split;
-    $nc = $#c;
+    chomp;
+    my @c = split //;
     push @stuff, \@c;
 }
-
-@stuff = reverse @stuff;
 
 my %ops = (
     '+' => sub { return $_[0] + $_[1] },
     '*' => sub { return $_[0] * $_[1] },
 );
 
+my $last = 0;
 my $s = 0;
-for my $i (0..$nc) {
-    my $op = $stuff[0][$i];
-    my $res = $stuff[1][$i];
-    $op = $ops{$op};
-
-    for my $ri (2..$#stuff) {
-        $res = $op->($res, $stuff[$ri][$i]);
+my $op;
+my $res;
+BIGLOOP:
+while (1) {
+    my $value = '';
+    for my $r (@stuff) {
+        if (!@$r) {
+            $last = 1;
+            $value = '  ';
+            last;
+        }
+        my $s = shift @$r;
+        $value .= $s;
     }
-    $s += $res;
+    if ($value =~ /^\s+$/) {
+        $s += $res;
+        $op = '';
+        $res = 0;
+        last BIGLOOP if $last;
+        next;
+    }
+    if ( $value =~ s/^\s*(\d+)\s*(\+|\*)$//g ) {
+        $op = $2;
+        $res = $1;
+        next;
+    }
+    $value =~ s/^\s*$//g;
+    $res = $ops{$op}->($res, $value);
 }
 
 say $s;
