@@ -20,7 +20,7 @@ while (<>) {
     for my $i (0..$#r) {
         next if $p[$i] eq '.';
         if ($p[$i] eq '|') {
-            if ($r[$i] eq '.') {
+            if ($r[$i] ne '^') {
                 $r[$i] = '|';
                 push @{$path{ coord($., $i) }}, coord($.-1, $i);
             }
