@@ -21,24 +21,27 @@ my @dists = order_distances();
 my %group_of = ();
 my $groupN = 0;
 
+my @lastXs = ();
 my $conns = 0;
 for my $dist ( @dists ) {
-    last if $conns == 1000;
     my ($ii,$jj,$d) = @$dist;
     if (! exists $group_of{$ii} and ! exists $group_of{$jj}) {
         #say "NEW GROUP $groupN ($ii, $jj)";
+        @lastXs = ($boxes[$ii][0], $boxes[$jj][0]);
         $group_of{$ii} = $group_of{$jj} = $groupN++;
         $conns++;
         next;
     }
     if ( ! exists $group_of{$ii} ) {
         #say " -> 1 Just adding $ii to $group_of{$jj} (($jj))";
+        @lastXs = ($boxes[$ii][0], $boxes[$jj][0]);
         $group_of{$ii} = $group_of{$jj};
         $conns++;
         next;
     }
     if ( ! exists $group_of{$jj} ) {
         #say " -> 2 Just adding $jj to $group_of{$ii} (($ii))";
+        @lastXs = ($boxes[$ii][0], $boxes[$jj][0]);
         $group_of{$jj} = $group_of{$ii};
         $conns++;
         next;
@@ -52,6 +55,7 @@ for my $dist ( @dists ) {
     }
 
     # Always merge towards $ii
+    @lastXs = ($boxes[$ii][0], $boxes[$jj][0]);
     my @jj_groups = grep { $group_of{$_} == $group_of{$jj} } keys %group_of;
     for my $jg (@jj_groups) {
         $group_of{$jg} = $group_of{$ii};
@@ -60,20 +64,7 @@ for my $dist ( @dists ) {
     $conns++;
 }
 
-my %group_counts;
-for my $k (keys %group_of) {
-    $group_counts{$group_of{$k}}++;
-}
-
-
-my @group_order = sort {$group_counts{$b} <=> $group_counts{$a} } keys %group_counts;
-#say "SIZE $_: $group_counts{$_}" for @group_order;
-
-say $group_counts{$group_order[0]} * $group_counts{$group_order[1]} * $group_counts{$group_order[2]};
-
-#for my $dist (@dists[0..10]) {
-#    printf "%3d %3d %6.1f\n", @$dist;
-#}
+say $lastXs[0] * $lastXs[1];
 
 
 sub order_distances {
