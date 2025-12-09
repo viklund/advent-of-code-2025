@@ -22,35 +22,30 @@ my %group_of = ();
 my $groupN = 0;
 
 my @lastXs = ();
-my $conns = 0;
 for my $dist ( @dists ) {
     my ($ii,$jj,$d) = @$dist;
     if (! exists $group_of{$ii} and ! exists $group_of{$jj}) {
         #say "NEW GROUP $groupN ($ii, $jj)";
         @lastXs = ($boxes[$ii][0], $boxes[$jj][0]);
         $group_of{$ii} = $group_of{$jj} = $groupN++;
-        $conns++;
         next;
     }
     if ( ! exists $group_of{$ii} ) {
         #say " -> 1 Just adding $ii to $group_of{$jj} (($jj))";
         @lastXs = ($boxes[$ii][0], $boxes[$jj][0]);
         $group_of{$ii} = $group_of{$jj};
-        $conns++;
         next;
     }
     if ( ! exists $group_of{$jj} ) {
         #say " -> 2 Just adding $jj to $group_of{$ii} (($ii))";
         @lastXs = ($boxes[$ii][0], $boxes[$jj][0]);
         $group_of{$jj} = $group_of{$ii};
-        $conns++;
         next;
     }
 
     # Already connected
     if ( $group_of{$ii} == $group_of{$jj} ) {
         #say " -> 3 Already same $jj and $ii, $group_of{$ii}";
-        $conns++;
         next;
     }
 
@@ -61,7 +56,6 @@ for my $dist ( @dists ) {
         $group_of{$jg} = $group_of{$ii};
     }
     #say " -> 4 Merging, $group_of{$jj}(@jj_groups) => $group_of{$ii}";
-    $conns++;
 }
 
 say $lastXs[0] * $lastXs[1];
